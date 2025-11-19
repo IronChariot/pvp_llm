@@ -1,0 +1,55 @@
+# Available models for each LLM provider
+# Add or update models here when new ones are released
+
+google:
+  - name: "Gemini 3.0 Pro (Preview)"
+    model: "gemini-3-pro-preview"
+  - name: "Gemini 2.5 Pro"
+    model: "gemini-2.5-pro"
+  - name: "Gemini 2.5 Flash"
+    model: "gemini-2.5-flash"
+  - name: "Gemini 2.5 Flash Lite"
+    model: "gemini-2.5-flash-lite"
+
+openai:
+  - name: "GPT-5.1"
+    model: "gpt-5.1"
+  - name: "GPT-5"
+    model: "gpt-5"
+  - name: "GPT-4.1"
+    model: "gpt-4.1"
+  - name: "GPT-4o"
+    model: "gpt-4o"
+  - name: "GPT-4o Mini"
+    model: "gpt-4o-mini"
+
+anthropic:
+  - name: "Claude 4.5 Sonnet (2025-09-29)"
+    model: "claude-4-5-sonnet-20250929"
+  - name: "Claude 4.5 Haiku (2025-10-01)"
+    model: "claude-4-5-haiku-20251001"
+  - name: "Claude 4.1 Opus (2025-08-05)"
+    model: "claude-4-1-opus-20250805"
+  - name: "Claude 3.5 Haiku (2024-10-22)"
+    model: "claude-3-5-haiku-20241022"
+
+xai:
+  - name: "Grok Code Fast 1"
+    model: "grok-code-fast-1"
+  - name: "Grok 4 Fast Reasoning"
+    model: "grok-4-fast-reasoning"
+  - name: "Grok 4 Fast Non-Reasoning"
+    model: "grok-4-fast-non-reasoning"
+  - name: "Grok 4"
+    model: "grok-4-0709"
+  - name: "Grok 3 Mini"
+    model: "grok-3-mini"
+
+ollama:
+  - name: "TBD"
+    model: "tbd"
+
+openrouter:
+  - name: "TBD"
+    model: "tbd"
+

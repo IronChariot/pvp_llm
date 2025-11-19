@@ -202,12 +202,22 @@ class DummyPokerPlayer(DummyProvider):
 
 ## Configuration
 
-### Custom Model Names
+### Model Selection
 
-When selecting a model provider, you can specify a custom model name:
+Models are configured in `config/models.yml`. After selecting a provider, you'll see a numbered list of available models:
+
 ```
-Enter model name (press Enter for default): gpt-4o-mini
+Available Google models:
+1. Gemini 2.0 Flash (Experimental)
+2. Gemini 1.5 Pro
+3. Gemini 1.5 Flash
+4. Gemini 1.0 Pro
+5. Custom (enter model name manually)
+
+Select model (1-5): 1
 ```
+
+To add new models, simply edit `config/models.yml` - no code changes needed! See `MODELS.md` for details.
 
 ### Word List
 

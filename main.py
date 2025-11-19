@@ -1,6 +1,7 @@
 """Main CLI interface for LLM PvP Gaming Framework."""
 import sys
-from typing import Dict, Tuple
+import yaml
+from typing import Dict, Tuple, List
 from llm.base import LLMBase
 from llm.providers import (
     GoogleProvider, OpenAIProvider, AnthropicProvider,
@@ -24,8 +25,65 @@ def select_game() -> str:
             print("Invalid choice. Please enter 1.")
 
 
-def select_model(team_name: str, role: str = "") -> Tuple[str, LLMBase]:
+def load_model_config() -> Dict:
+    """Load model configuration from YAML file."""
+    try:
+        with open("config/models.yml", "r", encoding="utf-8") as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        print(f"Warning: Could not load config/models.yml: {e}")
+        return {}
+
+
+def select_model_from_list(provider_name: str, provider_key: str, model_config: Dict) -> str:
+    """
+    Show numbered list of models for a provider and let user select.
+    
+    Args:
+        provider_name: Human-readable provider name
+        provider_key: Key in the config file (lowercase)
+        model_config: Loaded model configuration
+        
+    Returns:
+        Selected model identifier
+    """
+    models = model_config.get(provider_key, [])
+    
+    if not models:
+        # Fallback if config not loaded
+        custom_model = input(f"Enter model name for {provider_name}: ").strip()
+        return custom_model if custom_model else None
+    
+    print(f"\nAvailable {provider_name} models:")
+    for i, model_info in enumerate(models, 1):
+        print(f"{i}. {model_info['name']}")
+    print(f"{len(models) + 1}. Custom (enter model name manually)")
+    
+    while True:
+        choice = input(f"\nSelect model (1-{len(models) + 1}): ").strip()
+        try:
+            choice_num = int(choice)
+            if 1 <= choice_num <= len(models):
+                selected = models[choice_num - 1]
+                print(f"Selected: {selected['name']} ({selected['model']})")
+                return selected['model']
+            elif choice_num == len(models) + 1:
+                custom_model = input("Enter model name: ").strip()
+                if custom_model:
+                    return custom_model
+                else:
+                    print("Model name cannot be empty.")
+            else:
+                print(f"Please enter a number between 1 and {len(models) + 1}.")
+        except ValueError:
+            print("Please enter a valid number.")
+
+
+def select_model(team_name: str, role: str = "", model_config: Dict = None) -> Tuple[str, LLMBase]:
     """Prompt user to select a model for a team."""
+    if model_config is None:
+        model_config = {}
+    
     role_text = f" {role}" if role else ""
     print(f"\n=== Select Model for {team_name}{role_text} ===")
     print("1. Google (Gemini)")
@@ -37,44 +95,34 @@ def select_model(team_name: str, role: str = "") -> Tuple[str, LLMBase]:
     print("7. Dummy (Testing)")
     
     provider_map = {
-        "1": ("Google", lambda: GoogleProvider()),
-        "2": ("OpenAI", lambda: OpenAIProvider()),
-        "3": ("Anthropic", lambda: AnthropicProvider()),
-        "4": ("xAI", lambda: XAIProvider()),
-        "5": ("Ollama", lambda: OllamaProvider()),
-        "6": ("OpenRouter", lambda: OpenRouterProvider()),
-        "7": ("Dummy", lambda: None)  # Will be handled specially per game
+        "1": ("Google", "google", GoogleProvider),
+        "2": ("OpenAI", "openai", OpenAIProvider),
+        "3": ("Anthropic", "anthropic", AnthropicProvider),
+        "4": ("xAI", "xai", XAIProvider),
+        "5": ("Ollama", "ollama", OllamaProvider),
+        "6": ("OpenRouter", "openrouter", OpenRouterProvider),
+        "7": ("Dummy", "dummy", None)
     }
     
     while True:
         choice = input("\nEnter your choice (1-7): ").strip()
         if choice in provider_map:
-            provider_name, provider_factory = provider_map[choice]
+            provider_name, provider_key, provider_class = provider_map[choice]
             
             # For dummy, we need to know the role
             if choice == "7":
                 return "Dummy", None
             
             try:
-                provider = provider_factory()
+                # Select specific model from list
+                model_name = select_model_from_list(provider_name, provider_key, model_config)
                 
-                # Ask for specific model if not dummy
-                if choice != "7":
-                    custom_model = input(f"Enter model name (press Enter for default): ").strip()
-                    if custom_model:
-                        # Create new instance with custom model
-                        if choice == "1":
-                            provider = GoogleProvider(custom_model)
-                        elif choice == "2":
-                            provider = OpenAIProvider(custom_model)
-                        elif choice == "3":
-                            provider = AnthropicProvider(custom_model)
-                        elif choice == "4":
-                            provider = XAIProvider(custom_model)
-                        elif choice == "5":
-                            provider = OllamaProvider(custom_model)
-                        elif choice == "6":
-                            provider = OpenRouterProvider(custom_model)
+                if not model_name:
+                    print("No model selected. Please try again.")
+                    continue
+                
+                # Create provider instance with selected model
+                provider = provider_class(model_name)
                 
                 return provider_name, provider
             
@@ -208,13 +256,16 @@ def main():
     print("LLM PvP Gaming Framework")
     print("=" * 80)
     
+    # Load model configuration
+    model_config = load_model_config()
+    
     # Select game
     game_type = select_game()
     
     if game_type == "codenames":
         # For Codenames, we need to select models for each role
         print("\n=== Team A Setup ===")
-        team_a_name, team_a_base = select_model("Team A")
+        team_a_name, team_a_base = select_model("Team A", model_config=model_config)
         
         # Check if dummy, need separate instances for spymaster and agent
         if team_a_name == "Dummy":
@@ -238,7 +289,7 @@ def main():
                 team_a_agent = OpenRouterProvider(team_a_base.model_name)
         
         print("\n=== Team B Setup ===")
-        team_b_name, team_b_base = select_model("Team B")
+        team_b_name, team_b_base = select_model("Team B", model_config=model_config)
         
         if team_b_name == "Dummy":
             team_b_spymaster = DummyCodenamesSpymaster()
