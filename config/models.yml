@@ -34,6 +34,10 @@ anthropic:
     model: "claude-3-5-haiku-20241022"
 
 xai:
+  - name: "Grok 4.1 Fast Reasoning"
+    model: "grok-4-1-fast-reasoning"
+  - name: "Grok 4.1 Fast Non-Reasoning"
+    model: "grok-4-1-fast-non-reasoning"
   - name: "Grok Code Fast 1"
     model: "grok-code-fast-1"
   - name: "Grok 4 Fast Reasoning"

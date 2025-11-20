@@ -186,7 +186,13 @@ class CodenamesGame(Game):
         # Store the clue
         self.current_clue = clue
         self.current_clue_count = count
-        self.guesses_remaining = count + 1  # Can guess one more than the count
+        
+        # Calculate how many words this team has remaining
+        team_words = self.team_a_words if player.team == "Team A" else self.team_b_words
+        remaining_words = len(team_words - self.revealed_words)
+        
+        # Can guess count + 1, but not more than remaining words
+        self.guesses_remaining = min(count + 1, remaining_words)
         
         # Track total clue counts for this team
         if player.team == "Team A":
@@ -356,6 +362,36 @@ class CodenamesGame(Game):
             return self.winner
         
         return None
+    
+    def get_full_game_state(self) -> Dict:
+        """
+        Get complete game state for logging/replay purposes.
+        
+        Returns:
+            Dict containing all game state information including:
+            - All words on the board
+            - Team assignments for each word
+            - Assassin word
+            - Revealed words
+            - Current team and phase
+            - Scores
+        """
+        return {
+            "words": self.words,
+            "team_a_words": list(self.team_a_words),
+            "team_b_words": list(self.team_b_words),
+            "neutral_words": list(self.neutral_words),
+            "assassin_word": self.assassin_word,
+            "revealed_words": list(self.revealed_words),
+            "current_team": self.current_team,
+            "current_phase": self.current_phase,
+            "team_a_score": len(self.team_a_words & self.revealed_words),
+            "team_b_score": len(self.team_b_words & self.revealed_words),
+            "team_a_remaining": len(self.team_a_words - self.revealed_words),
+            "team_b_remaining": len(self.team_b_words - self.revealed_words),
+            "game_over": self.is_game_over(),
+            "winner": self.winner
+        }
     
     def get_public_action_description(self, player: Player, action: Dict, result: Dict) -> str:
         """Get human-readable description of an action."""

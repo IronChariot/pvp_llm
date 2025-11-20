@@ -139,15 +139,24 @@ with client.messages.stream(**api_params) as stream:
 **API**: xAI Chat Completions (OpenAI-compatible)
 **Token Counting**: From `response["usage"]["total_tokens"]`
 
+**Timeout Configuration**:
+- Set to 300 seconds (5 minutes) to accommodate reasoning models
+- Grok Fast Reasoning and other extended thinking models may take longer
+
 **Notes**:
 - Similar to OpenAI API format
 - Uses HTTPS client (httpx)
 - Base URL: https://api.x.ai/v1
+- Reasoning models automatically engage extended thinking
 
 ### Ollama (Local)
 
 **API**: Ollama Local HTTP API
 **Token Counting**: From `response["eval_count"] + response["prompt_eval_count"]`
+
+**Timeout Configuration**:
+- Set to 300 seconds (5 minutes) for slower local hardware
+- CPU-only inference can be very slow
 
 **Notes**:
 - Runs locally (default: http://localhost:11434)
@@ -159,6 +168,10 @@ with client.messages.stream(**api_params) as stream:
 
 **API**: OpenRouter (multi-provider gateway)
 **Token Counting**: From `response["usage"]["total_tokens"]`
+
+**Timeout Configuration**:
+- Set to 300 seconds (5 minutes) to accommodate various model types
+- Some proxied models may have extended thinking or be slower
 
 **Notes**:
 - Provides access to models from multiple providers

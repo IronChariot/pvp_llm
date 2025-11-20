@@ -169,6 +169,17 @@ def play_codenames(team_a_models: Dict, team_b_models: Dict, tracker: GameTracke
     
     game.setup()
     
+    # Get initial game state for logging
+    initial_state = game.get_full_game_state()
+    
+    # Initialize tracker with initial game state
+    tracker.start_game(
+        game_type="Codenames",
+        team_a_model=f"{team_a_spymaster.model_name}",
+        team_b_model=f"{team_b_spymaster.model_name}",
+        initial_game_state=initial_state
+    )
+    
     print("\n" + "=" * 80)
     print("GAME START: Codenames")
     print("=" * 80)
@@ -223,8 +234,11 @@ def play_codenames(team_a_models: Dict, team_b_models: Dict, tracker: GameTracke
             
             score = game.get_score(team)
             
+            # Get game state after this turn for replay capability
+            game_state_after = game.get_full_game_state()
+            
             tracker.update_stats(team, turn_tokens, turn_time, score)
-            tracker.log_turn(player.full_name, team, full_response, action, result, public_desc)
+            tracker.log_turn(player.full_name, team, full_response, action, result, public_desc, game_state_after)
             
             # Show current scores
             if result.get("success"):
@@ -332,11 +346,6 @@ def main():
             
             # Create tracker for this game
             tracker = GameTracker()
-            tracker.start_game(
-                game_type="Codenames",
-                team_a_model=f"{team_a_name} ({team_a_spymaster.model_name})",
-                team_b_model=f"{team_b_name} ({team_b_spymaster.model_name})"
-            )
             
             try:
                 winner = play_codenames(team_a_models, team_b_models, tracker)

@@ -81,17 +81,30 @@ You must provide:
 }}
 ```
 
-IMPORTANT:
-- Guess words IN ORDER of confidence (most confident first)
-- You can guess fewer words than allowed if you're uncertain
-- Remember previous clues from both teams - they contain information
-- Stop early if you're not confident, to avoid the assassin or opponent words
-- You can guess up to (clue count + 1) words to account for previous unfinished clues
+CRITICAL GUESSING RULES:
+
+1. YOU DON'T HAVE TO GUESS THE FULL NUMBER
+   - If your Spymaster says "hole, 3" but you only see 2 words related to "hole", guess just 2
+   - NEVER guess a word you're uncertain about just to reach the count
+   - An uncertain guess risks: hitting the assassin (instant loss), hitting opponent's word (giving them a point), or hitting neutral (ending your turn)
+   - It's ALWAYS safer to guess fewer confident words than to risk an uncertain guess
+
+2. ORDER MATTERS - MOST CONFIDENT FIRST
+   - List your guesses in ORDER of confidence (most confident → least confident)
+   - If your first guess is wrong, you won't get to the other guesses
+   - Example: If 90% sure about "mouse" and 70% sure about "cheese", put "mouse" first
+   - This maximizes your chances of getting at least your best guesses in
+
+3. YOU CAN GUESS JUST ONE WORD
+   - Even if the count is 3, you can guess just 1 word if that's all you're confident about
+   - Getting 1 correct word is better than guessing 2 and hitting the assassin on the second
 
 STRATEGY TIPS:
 - Think about semantic connections between the clue and board words
 - Consider what words the opponent might be targeting (to avoid them)
 - If a previous clue seems connected to remaining words, you can try those too
-- When in doubt, guess fewer words rather than risk ending your turn or hitting the assassin
+- When in doubt, guess FEWER words rather than risk disaster
+- A conservative strategy (guessing only high-confidence words) often wins games
+- If your opponent is 1 guess away from winning, it may be worth taking more risks to win the game
 """
 

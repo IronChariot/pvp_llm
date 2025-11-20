@@ -282,7 +282,8 @@ class XAIProvider(LLMBase):
             raise ValueError("XAI_API_KEY environment variable not set")
         self.api_key = api_key
         self.base_url = "https://api.x.ai/v1"
-        self.client = httpx.Client()
+        # Set generous timeout for reasoning models (5 minutes)
+        self.client = httpx.Client(timeout=300.0)
     
     def send_message(self, messages: List[Dict[str, str]], system_prompt: str = "") -> Dict:
         """Send message to xAI API."""
@@ -328,7 +329,8 @@ class OllamaProvider(LLMBase):
         super().__init__(model_name)
         import httpx
         self.base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-        self.client = httpx.Client()
+        # Set generous timeout for local models (can be slow on CPU)
+        self.client = httpx.Client(timeout=300.0)
     
     def send_message(self, messages: List[Dict[str, str]], system_prompt: str = "") -> Dict:
         """Send message to Ollama API."""
@@ -377,7 +379,8 @@ class OpenRouterProvider(LLMBase):
             raise ValueError("OPENROUTER_API_KEY environment variable not set")
         self.api_key = api_key
         self.base_url = "https://openrouter.ai/api/v1"
-        self.client = httpx.Client()
+        # Set generous timeout for various models (including reasoning models)
+        self.client = httpx.Client(timeout=300.0)
     
     def send_message(self, messages: List[Dict[str, str]], system_prompt: str = "") -> Dict:
         """Send message to OpenRouter API."""
