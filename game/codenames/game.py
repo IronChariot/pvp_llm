@@ -30,6 +30,12 @@ class CodenamesGame(Game):
         self.current_clue_count = 0
         self.guesses_remaining = 0
         self.game_history: List[str] = []
+        
+        # Track clues and correct guesses per team for extra guess optimization
+        self.team_a_total_clue_counts = 0
+        self.team_a_correct_guesses = 0
+        self.team_b_total_clue_counts = 0
+        self.team_b_correct_guesses = 0
     
     def setup(self):
         """Initialize the Codenames game."""
@@ -182,6 +188,12 @@ class CodenamesGame(Game):
         self.current_clue_count = count
         self.guesses_remaining = count + 1  # Can guess one more than the count
         
+        # Track total clue counts for this team
+        if player.team == "Team A":
+            self.team_a_total_clue_counts += count
+        else:
+            self.team_b_total_clue_counts += count
+        
         # Add to history
         history_msg = f"{player.team} Spymaster: {clue}, {count}"
         self.game_history.append(history_msg)
@@ -263,6 +275,11 @@ class CodenamesGame(Game):
                     "result": "correct",
                     "message": "Correct! One of your words."
                 })
+                # Track correct guesses for this team
+                if player.team == "Team A":
+                    self.team_a_correct_guesses += 1
+                else:
+                    self.team_b_correct_guesses += 1
                 # Continue guessing
             elif guess in (self.team_b_words if player.team == "Team A" else self.team_a_words):
                 results.append({
@@ -292,7 +309,30 @@ class CodenamesGame(Game):
                     p.add_public_message(history_msg)
         
         # Check if turn should end
-        if stop_guessing or self.guesses_remaining <= 0:
+        should_end_turn = False
+        
+        if stop_guessing:
+            # Made a wrong guess, turn ends immediately
+            should_end_turn = True
+        elif self.guesses_remaining <= 0:
+            # Used all guesses
+            should_end_turn = True
+        elif self.guesses_remaining == 1:
+            # Only the +1 extra guess remains
+            # Check if there are leftover clues from previous turns
+            if player.team == "Team A":
+                total_clues = self.team_a_total_clue_counts
+                correct_guesses = self.team_a_correct_guesses
+            else:
+                total_clues = self.team_b_total_clue_counts
+                correct_guesses = self.team_b_correct_guesses
+            
+            # If all clues have been used perfectly (no leftovers), skip the extra guess
+            if total_clues <= correct_guesses:
+                should_end_turn = True
+                # Note: We don't decrement guesses_remaining here since we're skipping it
+        
+        if should_end_turn:
             # Switch to other team's spymaster
             self.current_team = "Team B" if self.current_team == "Team A" else "Team A"
             self.current_phase = "spymaster"
