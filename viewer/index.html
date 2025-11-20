@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codenames Game Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar: Team A -->
+        <div class="sidebar team-a-sidebar">
+            <div class="team-header team-a-header">
+                <h2>Team A</h2>
+                <div id="team-a-model" class="model-name">Model Name</div>
+                <div class="score">Score: <span id="team-a-score">0</span></div>
+            </div>
+            <div id="team-a-log" class="log-container">
+                <!-- Logs will be injected here -->
+            </div>
+        </div>
+
+        <!-- Center: Game Board -->
+        <div class="center-panel">
+            <div class="game-controls-top">
+                <select id="game-selector">
+                    <option value="" disabled selected>Select a Game</option>
+                </select>
+                <div id="clue-display" class="clue-display hidden">
+                    <span id="clue-text" class="clue-text">CLUE</span>
+                    <span id="clue-count" class="clue-count">0</span>
+                </div>
+                <div id="turn-indicator" class="turn-indicator">Waiting to start...</div>
+            </div>
+
+            <div id="game-grid" class="game-grid">
+                <!-- 25 cards will be injected here -->
+            </div>
+
+            <div class="game-controls-bottom">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn" disabled>Next (Space)</button>
+                <button id="reset-btn" disabled>Reset</button>
+            </div>
+             <div id="status-message" class="status-message"></div>
+        </div>
+
+        <!-- Right Sidebar: Team B -->
+        <div class="sidebar team-b-sidebar">
+            <div class="team-header team-b-header">
+                <h2>Team B</h2>
+                <div id="team-b-model" class="model-name">Model Name</div>
+                <div class="score">Score: <span id="team-b-score">0</span></div>
+            </div>
+            <div id="team-b-log" class="log-container">
+                <!-- Logs will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
