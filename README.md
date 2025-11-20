@@ -17,6 +17,8 @@ A Python framework for allowing various Large Language Models (LLMs) to compete 
 pip install -r requirements.txt
 ```
 
+**Note**: We use the newer `google-genai` library (not `google-generativeai`) for better compatibility. Extended thinking configuration for Gemini models will be added when supported in the Python SDK.
+
 2. Set up API keys as environment variables:
 ```bash
 # Google AI Studio
@@ -224,6 +226,18 @@ To add new models, simply edit `config/models.yml` - no code changes needed! See
 Edit `config/words.txt` to customize the Codenames word list. Each line should contain one word. The game randomly selects 25 words per game.
 
 ## Testing
+
+### Provider Validation
+
+Before running expensive game tests, validate your API setup and token counting:
+
+```bash
+python test_providers.py
+```
+
+This will test each provider's connection and verify token counting is working correctly. See `TESTING.md` for details.
+
+### Game Testing with Dummy Players
 
 Test the framework with dummy players to avoid API costs:
 ```python

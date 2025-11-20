@@ -25,11 +25,11 @@ openai:
 
 anthropic:
   - name: "Claude 4.5 Sonnet (2025-09-29)"
-    model: "claude-4-5-sonnet-20250929"
+    model: "claude-sonnet-4-5-20250929"
   - name: "Claude 4.5 Haiku (2025-10-01)"
-    model: "claude-4-5-haiku-20251001"
+    model: "claude-haiku-4-5-20251001"
   - name: "Claude 4.1 Opus (2025-08-05)"
-    model: "claude-4-1-opus-20250805"
+    model: "claude-opus-4-1-20250805"
   - name: "Claude 3.5 Haiku (2024-10-22)"
     model: "claude-3-5-haiku-20241022"
 
@@ -40,8 +40,9 @@ xai:
     model: "grok-4-fast-reasoning"
   - name: "Grok 4 Fast Non-Reasoning"
     model: "grok-4-fast-non-reasoning"
-  - name: "Grok 4"
-    model: "grok-4-0709"
+  # Grok 4 times out, double check this later
+  # - name: "Grok 4"
+  #   model: "grok-4-0709"
   - name: "Grok 3 Mini"
     model: "grok-3-mini"
 
